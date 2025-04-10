@@ -5,6 +5,7 @@ import { cn, getRandomInterviewCover } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import DisplayTechIcons from "./DisplayTechIcons";
+import { getFeedbackByInterviewId } from "@/lib/actions/general.action";
 
 interface InterviewCardProps {
   id: string;
@@ -15,7 +16,7 @@ interface InterviewCardProps {
   createdAt: string;
 }
 
-const InterviewCard = ({
+const InterviewCard = async ({
   id,
   userId,
   role,
@@ -23,7 +24,10 @@ const InterviewCard = ({
   techstack,
   createdAt,
 }: InterviewCardProps) => {
-  const feedback = null as Feedback | null;
+  const feedback =
+    userId && id
+      ? await getFeedbackByInterviewId({ interviewId: id, userId })
+      : null;
   const normalizedType = /mix/gi.test(type) ? "Mixed" : type;
 
   const badgeColor =
